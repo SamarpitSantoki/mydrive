@@ -2,21 +2,22 @@ import { ItemCard } from "./ItemCard";
 import { FaFolder, FaPlusCircle } from "react-icons/fa";
 import { useState } from "react";
 import useDirectory from "../hooks/useDirectory";
+import { Button, IconButton } from "@mui/material";
+import { MdClose } from "react-icons/md";
 function MyFiles() {
   const [modal, setModal] = useState(false);
   const {
     breadcrump,
     currentDirectory,
-    dummyData,
     newFolder,
-    setBreadcrump,
-    setCurrentDirectory,
-    setDummyData,
     setNewFolder,
     handleFolderClick,
     handleBreadcrumpClick,
     handleFolderAdd,
+    isFetching,
   } = useDirectory(setModal);
+
+  if (isFetching) return <div>Loading...</div>;
 
   return (
     <div className="sm:px-12 ">
@@ -57,7 +58,7 @@ function MyFiles() {
           transition duration-200 ease-in-out
         "
         >
-          {dummyData.map((item: any) => {
+          {currentDirectory?.map((item: any) => {
             return (
               <ItemCard
                 key={item.id}
@@ -77,19 +78,15 @@ function MyFiles() {
         fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50
       "
         >
-          <div className="bg-white px-10 py-5 rounded-md">
+          <div className="bg-white px-10 py-5 rounded-md w-1/3">
             <div>
               <div className="flex items-center justify-between">
                 <div className="text-2xl font-semibold">Add Folder</div>
 
-                <button
-                  className="text-2xl font-semibold text-red-600 font-sans
-                  hover:opacity-80 transition duration-200 ease-in-out
-                "
-                  onClick={() => setModal(false)}
-                >
-                  X
-                </button>
+                {/* MUI close button */}
+                <IconButton onClick={() => setModal(false)}>
+                  <MdClose />
+                </IconButton>
               </div>
               <div className="mt-5">
                 <div className="text-xl font-semibold">Folder Name</div>

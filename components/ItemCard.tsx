@@ -17,6 +17,9 @@ export function ItemCard(props: {
       onDoubleClick={() => {
         props.handleFolderClick(props);
       }}
+      onTouchEndCapture={() => {
+        props.handleFolderClick(props);
+      }}
     >
       <div
         className="cardHeader flex grow items-center justify-between px-5"

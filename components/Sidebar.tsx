@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SidebarLinks from "./SidebarLinks";
 import { FaStar, FaShare, FaFolder } from "react-icons/fa";
 
@@ -19,6 +19,10 @@ function Sidebar() {
       icon: <FaStar />,
     },
   ];
+  useEffect(() => {
+    setActiveLink(tabs[0].name);
+  }, []);
+
   return (
     <aside className="hidden sticky left-0 top-0 sm:flex flex-col h-screen justify-between items-center gap-4 bg-mainBlack w-40 md:w-56 text-white">
       <div

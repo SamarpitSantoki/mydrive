@@ -1,11 +1,21 @@
 import Head from "next/head";
-import { Inter } from "@next/font/google";
-import SidebarLinks from "../components/SidebarLinks";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import MyFiles from "../components/MyFiles";
+import { useGetDirectoryQuery } from "../store/api";
+import { useRouter } from "next/router";
+import { useAppSelector } from "../store/hooks";
+import { authSelector } from "../store/authSlice";
+import { useEffect } from "react";
+import SignIn from "./auth/signin";
 
 export default function Home() {
+  const router = useRouter();
+  const { isAuthenticated } = useAppSelector(authSelector);
+  if (!isAuthenticated && router.pathname !== "/auth/signin") {
+    return <SignIn />;
+  }
+
   return (
     <>
       <Head>
