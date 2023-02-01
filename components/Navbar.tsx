@@ -1,5 +1,6 @@
 import { Box, Modal } from "@mui/material";
 import { useState } from "react";
+import axios from "axios";
 import {
   BsPlusCircleFill,
   BsBarChartFill,
@@ -7,8 +8,34 @@ import {
   BsBellFill,
 } from "react-icons/bs";
 import FileDropzone from "./FileDropzone";
+
 function Navbar() {
   const [addFileModal, setAddFileModal] = useState(false);
+  const [uploadingStatus, setUploadingStatus] = useState<any>();
+  const [uploadedFile, setUploadedFile] = useState<any>();
+  const [file, setFile] = useState<any>()
+  const BUCKET_URL = "https://my-testing-drive.s3.us-east-2.amazonaws.com/";
+  const uploadFile = async () => {
+    setUploadingStatus("Uploading the file to AWS S3");
+
+    let { data } = await axios.post("/api/s3/uploadFile", {
+      name: file.name,
+      type: file.type,
+    });
+
+    console.log(data);
+
+    const url = data.url;
+    let { data: newData } = await axios.put(url, file, {
+      headers: {
+        "Content-type": file.type,
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
+
+    setUploadedFile(BUCKET_URL + file.name);
+    setFile(null);
+  };
 
   return (
     <div className="sticky top-0 z-50 flex items-center md:px-16 h-16 bg-white border-b-2">
