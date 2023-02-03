@@ -35,7 +35,32 @@ export const api = createApi({
         { type: "Directory", id: arg.parentId },
       ],
     }),
+    deleteItems: builder.mutation<any, { id: string }>({
+      query: (payload) => ({
+        url: `/directory/${payload.id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: "Directory" }],
+    }),
+    uploadFile: builder.mutation<
+      any,
+      { name: string; parentId: string; nodeType: string; url: string }
+    >({
+      query: (payload) => ({
+        url: "/directory",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: "Directory", id: arg.parentId },
+      ],
+    }),
   }),
 });
 
-export const { useAddFolderMutation, useGetDirectoryQuery } = api;
+export const {
+  useAddFolderMutation,
+  useGetDirectoryQuery,
+  useDeleteItemsMutation,
+  useUploadFileMutation,
+} = api;

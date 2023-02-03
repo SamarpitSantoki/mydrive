@@ -28,9 +28,8 @@ model node {
   tags       String[]
   isDeleted  Boolean  @default(false)
   ownerId    String   @db.ObjectId
-  sharedWith String[]
+  sharedWith String[] @db.ObjectId 
   url        String?
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

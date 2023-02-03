@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
-import { Copyright } from "../../components/CopyRight";
+import { Copyright } from "../../components/common/CopyRight";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { authSelector, Login } from "../../store/authSlice";
 import { useEffect } from "react";
@@ -137,7 +137,7 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="signup" variant="body2">
+                <Link href="/auth/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

@@ -10,7 +10,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import bytesToSize from "./byteToSize";
+import bytesToSize from "../../helpers/byteToSize";
 
 import { FaCopy, FaCross } from "react-icons/fa";
 

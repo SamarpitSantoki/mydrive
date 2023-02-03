@@ -1,25 +1,38 @@
 import { useEffect, useState } from "react";
-import { useAddFolderMutation, useGetDirectoryQuery } from "../store/api";
+import {
+  useAddFolderMutation,
+  useDeleteItemsMutation,
+  useGetDirectoryQuery,
+} from "../store/api";
 
-function useDirectory(setModal: any) {
-  const [addFolderMutation, result] = useAddFolderMutation();
-
+function useDirectory(setModal?: any) {
+  const [addFolderMutation, FolderAddResult] = useAddFolderMutation();
+  const [deleteItemMutation, ItemDeleteResult] = useDeleteItemsMutation();
   const [breadcrump, setBreadcrump] = useState([
     {
       id: "null",
       name: "root",
     },
   ]);
+
   const { data, isFetching, isError } = useGetDirectoryQuery(
     breadcrump[breadcrump.length - 1].id
   );
   const [currentDirectory, setCurrentDirectory] = useState<any>(data?.childs);
   const [newFolder, setNewFolder] = useState<string>("");
-
+  const [workingDirectory, setWorkingDirectory] = useState<{
+    id: string;
+    name: string;
+  }>({
+    id: "null",
+    name: "root",
+  });
   const handleFolderClick = (item: any) => {
     if (item.nodeType === "folder") {
       setBreadcrump((prev) => [...prev, item]);
     }
+    setWorkingDirectory(item);
+
     console.log(item);
   };
 
@@ -31,7 +44,7 @@ function useDirectory(setModal: any) {
       return [...prev];
     });
 
-    console.log(item);
+    console.log("ti", workingDirectory);
   };
 
   const handleFolderAdd = () => {
@@ -44,11 +57,18 @@ function useDirectory(setModal: any) {
     setModal(false);
   };
 
+  const handleDelete = (items: string) => {
+    deleteItemMutation({
+      id: items,
+    });
+  };
+
   useEffect(() => {
     setCurrentDirectory(data?.childs);
   }, [data]);
 
   return {
+    workingDirectory: data,
     currentDirectory,
     setCurrentDirectory,
     breadcrump,
@@ -58,6 +78,7 @@ function useDirectory(setModal: any) {
     handleFolderClick,
     handleBreadcrumpClick,
     handleFolderAdd,
+    handleDelete,
     isFetching,
   };
 }

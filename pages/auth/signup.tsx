@@ -11,7 +11,7 @@ import { MdLockOutline } from "react-icons/md";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Copyright } from "../../components/CopyRight";
+import { Copyright } from "../../components/common/CopyRight";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { authSelector, SignUp as Signup } from "../../store/authSlice";
 import { useEffect } from "react";
@@ -131,7 +131,7 @@ export default function SignUp() {
             </button>
             <Grid container>
               <Grid item>
-                <Link href="signin" variant="body2">
+                <Link href="/auth/signin" variant="body2">
                   {"Already have an account? Sign In"}
                 </Link>
               </Grid>

@@ -2,10 +2,17 @@ import { ItemCard } from "./ItemCard";
 import { FaFolder, FaPlusCircle } from "react-icons/fa";
 import { useState } from "react";
 import useDirectory from "../hooks/useDirectory";
-import { Button, IconButton } from "@mui/material";
-import { MdClose } from "react-icons/md";
+import { Box, IconButton, Modal, Skeleton } from "@mui/material";
+import { MdClose, MdRefresh } from "react-icons/md";
+import FileSkeleton from "./common/FileSkeleton";
+import { useAppDispatch } from "../store/hooks";
+import { api, useUploadFileMutation } from "../store/api";
+import FileDropzone from "./common/FileDropzone";
+import axios from "axios";
 function MyFiles() {
   const [modal, setModal] = useState(false);
+  const BUCKET_URL = "https://my-testing-drive.s3.us-east-2.amazonaws.com/";
+
   const {
     breadcrump,
     currentDirectory,
@@ -14,11 +21,37 @@ function MyFiles() {
     handleFolderClick,
     handleBreadcrumpClick,
     handleFolderAdd,
+    handleDelete,
     isFetching,
   } = useDirectory(setModal);
+  const [addFileModal, setAddFileModal] = useState(false);
+  const [mutateUploadFile, result] = useUploadFileMutation();
 
-  if (isFetching) return <div>Loading...</div>;
+  const dispatch = useAppDispatch();
+  const uploadFile = async (e: File) => {
+    console.log("breadcrump", breadcrump);
 
+    let { data } = await axios.post("/api/s3/uploadFile", {
+      name: e.name,
+      type: e.type,
+    });
+
+    console.log(data);
+
+    const url = data.url;
+    let { data: newData } = await axios.put(url, e, {
+      headers: {
+        "Content-type": e.type,
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
+    mutateUploadFile({
+      name: e.name,
+      nodeType: e.type,
+      url: BUCKET_URL + e.name,
+      parentId: breadcrump[breadcrump.length - 1].id,
+    });
+  };
   return (
     <div className="sm:px-12 ">
       <div className="p-5">
@@ -30,7 +63,22 @@ function MyFiles() {
             <div className="text-xl font-semibold">My Files</div>
           </div>
           <div
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 cursor-pointer
+              hover:shadow-inner   p-2 rounded-xl 
+              transition duration-100 ease-in-out
+              hover:shadow-slate-400 hover:ring-mainPrimary hover:ring-2
+            "
+            onClick={() => setAddFileModal(true)}
+          >
+            <FaPlusCircle className="text-2xl text-mainPrimary" />
+            <div className="text-xl font-semibold">Add File</div>
+          </div>
+          <div
+            className="flex items-center gap-2 cursor-pointer
+              hover:shadow-inner   p-2 rounded-xl 
+              transition duration-100 ease-in-out
+              hover:shadow-slate-400 hover:ring-mainPrimary hover:ring-2
+            "
             onClick={() => setModal(true)}
           >
             <FaPlusCircle className="text-2xl text-mainPrimary" />
@@ -38,7 +86,7 @@ function MyFiles() {
           </div>
         </div>
         <div className="flex items-center gap-2 mt-1">
-          <div className="text-xl font-semibold text-mainPrimary">
+          <div className="flex-1 text-xl font-semibold text-mainPrimary">
             {breadcrump.map((item) => {
               return (
                 <span
@@ -52,21 +100,41 @@ function MyFiles() {
               );
             })}
           </div>
+          {/* refresh button */}
+          <IconButton
+            onClick={() => {
+              dispatch(
+                api.util.invalidateTags([
+                  {
+                    type: "Directory",
+                    id: breadcrump[breadcrump.length - 1].id,
+                  },
+                ])
+              );
+            }}
+          >
+            <MdRefresh className="text-2xl text-mainPrimary" />
+          </IconButton>
         </div>
         <div
           className="directory grid  sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 py-4 gap-y-3 
           transition duration-200 ease-in-out
-        "
+          "
         >
-          {currentDirectory?.map((item: any) => {
-            return (
-              <ItemCard
-                key={item.id}
-                {...item}
-                handleFolderClick={handleFolderClick}
-              />
-            );
-          })}
+          {isFetching ? (
+            <FileSkeleton />
+          ) : (
+            currentDirectory?.map((item: any) => {
+              return (
+                <ItemCard
+                  key={item.id}
+                  {...item}
+                  handleFolderClick={handleFolderClick}
+                  handleDelete={handleDelete}
+                />
+              );
+            })
+          )}
         </div>
       </div>
       {/* create a modal to add new folder */}
@@ -114,6 +182,61 @@ function MyFiles() {
           </div>
         </div>
       )}
+
+      <Modal
+        open={addFileModal}
+        onClose={() => {
+          setAddFileModal(false);
+        }}
+      >
+        <Box
+          sx={{
+            py: "1rem",
+            bgcolor: "background.paper",
+            border: "2px solid #583DA1",
+            boxShadow: 24,
+            p: 4,
+            display: "grid",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            alignItems: "center",
+          }}
+        >
+          {/* {showFileDropDown && (
+            <>
+              {!imageUrl ? ( */}
+          <FileDropzone
+            accept="image/*"
+            maxFiles={1}
+            onDrop={(e: [File]) => {
+              uploadFile(e[0]);
+            }}
+          />
+          {result.isLoading && (
+            <div className="flex flex-col items-center justify-center">
+              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-mainPrimary"></div>
+              <p className="text-center mt-2">Uploading</p>
+            </div>
+          )}
+          {/* //     ) : (
+          //       <Box
+          //         sx={{
+          //           gridArea: "1 / 1",
+          //           backgroundImage: `url(${imageUrl})`,
+          //           backgroundPosition: "center",
+          //           backgroundSize: "cover",
+          //           borderRadius: 1,
+          //           height: 230,
+          //           mt: 3,
+          //         }}
+          //       />
+          //     )}{" "}
+          //   </>
+          // )} */}
+        </Box>
+      </Modal>
     </div>
   );
 }
