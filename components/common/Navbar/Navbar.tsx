@@ -13,11 +13,7 @@ import { useAppSelector } from "../../../store/hooks";
 import useDirectory from "../../../hooks/useDirectory";
 
 function Navbar() {
-  const [mutateUploadFile, result] = useUploadFileMutation();
   const { workingDirectory, breadcrump } = useDirectory();
-  const [addFileModal, setAddFileModal] = useState(false);
-  const [uploadingStatus, setUploadingStatus] = useState<any>();
-  const BUCKET_URL = "https://my-testing-drive.s3.us-east-2.amazonaws.com/";
 
   useEffect(() => {
     console.log("workingDirectory", workingDirectory, "breadcrump", breadcrump);
@@ -28,9 +24,6 @@ function Navbar() {
         className="flex items-center cursor-pointer hover:shadow-inner px-2 py-1 rounded-xl 
         transition duration-100 ease-in-out
         hover:shadow-slate-400 hover:ring-mainPrimary hover:ring-2"
-        onClick={() => {
-          setAddFileModal(true);
-        }}
       >
         <span className="rounded-full bg-offWhite p-3">
           <BsPlusCircleFill color="#583DA1" />

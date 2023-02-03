@@ -5,10 +5,11 @@ import useDirectory from "../hooks/useDirectory";
 import { Box, IconButton, Modal, Skeleton } from "@mui/material";
 import { MdClose, MdRefresh } from "react-icons/md";
 import FileSkeleton from "./common/FileSkeleton";
-import { useAppDispatch } from "../store/hooks";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { api, useUploadFileMutation } from "../store/api";
 import FileDropzone from "./common/FileDropzone";
 import axios from "axios";
+import { authSelector } from "../store/authSlice";
 function MyFiles() {
   const [modal, setModal] = useState(false);
   const BUCKET_URL = "https://my-testing-drive.s3.us-east-2.amazonaws.com/";
@@ -23,16 +24,19 @@ function MyFiles() {
     handleFolderAdd,
     handleDelete,
     isFetching,
+    workingDirectory,
   } = useDirectory(setModal);
+  const { user } = useAppSelector(authSelector);
   const [addFileModal, setAddFileModal] = useState(false);
   const [mutateUploadFile, result] = useUploadFileMutation();
+  const [awsUrlCall, setAwsUrlCall] = useState(false);
 
   const dispatch = useAppDispatch();
   const uploadFile = async (e: File) => {
     console.log("breadcrump", breadcrump);
-
+    setAwsUrlCall(true);
     let { data } = await axios.post("/api/s3/uploadFile", {
-      name: e.name,
+      name: user.id + "." + workingDirectory.id + "." + e.name,
       type: e.type,
     });
 
@@ -48,9 +52,10 @@ function MyFiles() {
     mutateUploadFile({
       name: e.name,
       nodeType: e.type,
-      url: BUCKET_URL + e.name,
+      url: BUCKET_URL + user.id + "." + workingDirectory.id + "." + e.name,
       parentId: breadcrump[breadcrump.length - 1].id,
     });
+    setAwsUrlCall(false);
   };
   return (
     <div className="sm:px-12 ">
@@ -214,7 +219,7 @@ function MyFiles() {
               uploadFile(e[0]);
             }}
           />
-          {result.isLoading && (
+          {(result.isLoading || awsUrlCall) && (
             <div className="flex flex-col items-center justify-center">
               <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-mainPrimary"></div>
               <p className="text-center mt-2">Uploading</p>

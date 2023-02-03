@@ -4,7 +4,6 @@ import {
   deleteNode,
   getFolder,
 } from "../../../controllers/directory/directory";
-import prisma from "../../../helpers/prisma";
 
 export default async function handler(
   req: NextApiRequest,

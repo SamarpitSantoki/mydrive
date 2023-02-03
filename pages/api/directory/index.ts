@@ -15,9 +15,9 @@ export default async function handler(
       req.body.url
     );
     if (!resp.sucess) {
-      res.status(400).send("Error");
+      return res.status(400).send("Error");
     }
-    res.status(200).send("OK");
+    return res.status(200).send("OK");
   }
   res.status(400).send("Error");
 }

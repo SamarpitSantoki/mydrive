@@ -1,4 +1,14 @@
 import { S3 } from "aws-sdk";
+// Create service client module using ES6 syntax.
+import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
+// Set the AWS Region.
+const REGION = "us-east-2";
+// Create an Amazon S3 service client object.
+const s3Client = new S3Client({ region: REGION,credentials:{
+  accessKeyId: process.env.ACCESS_KEY!,
+  secretAccessKey: process.env.SECRET_KEY!,
+} });
+
 import prisma from "../../helpers/prisma";
 
 const s3 = new S3({
@@ -113,12 +123,34 @@ export const deleteNode = async (id: string) => {
         id,
       },
     });
+    console.log(resp);
 
-    if (resp.nodeType !== "folder") {
-      s3.deleteObject({
-        Bucket: process.env.BUCKET_NAME!,
-        Key: resp.name,
+    if (resp!.nodeType !== "folder") {
+      console.log(resp!.url?.split("/").pop()!);
+
+      const res = await s3Client.send(new DeleteObjectCommand(
+        {
+          Bucket: process.env.BUCKET_NAME!,
+          Key: resp!.url?.split("/").pop()!,
+        }
+      )).catch((err) => {
+        console.log(err);
       });
+
+      console.log('check',res);
+      // s3.deleteObject(
+      //   {
+      //     Bucket: process.env.BUCKET_NAME!,
+      //     Key: resp.url?.split("/").pop()!,
+      //   },
+      //   (err, data) => {
+      //     if (err) {
+      //       console.log(err);
+      //     } else {
+      //       console.log(data);
+      //     }
+      //   }
+      // );
     }
 
     return {

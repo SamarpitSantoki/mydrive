@@ -20,7 +20,6 @@ export const Login = createAsyncThunk(
       email: payload.email,
       password: payload.password,
     });
-    console.log("response", response);
 
     return response.data;
   }
