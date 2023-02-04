@@ -50,7 +50,7 @@ export function ItemCard(props: {
           className="cardHeader flex grow items-center justify-end px-5"
           style={{
             backgroundSize: "cover",
-            backgroundImage: `url(${props.url})`,
+            backgroundImage: `url(${props?.url})`,
           }}
         >
           {!viewable.includes(props.nodeType) && (
@@ -101,15 +101,16 @@ export function ItemCard(props: {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem>
+            <MenuItem
+              onClick={() => {
+                props.handleDelete(props.id);
+              }}
+            >
               Delete
               <ListItemIcon
                 style={{
                   flex: 1,
                   placeContent: "end",
-                }}
-                onClick={() => {
-                  props.handleDelete(props.id);
                 }}
               >
                 <MdDelete fontSize="small" />

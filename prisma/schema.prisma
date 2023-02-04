@@ -32,4 +32,5 @@ model node {
   url        String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@index([ownerId], name: "ownerId")
 }

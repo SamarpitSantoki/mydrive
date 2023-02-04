@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import SidebarLinks from "./SidebarLinks";
 import { FaStar, FaShare, FaFolder } from "react-icons/fa";
+import { useAppDispatch } from "../../../store/hooks";
+import { authActions } from "../../../store/authSlice";
 
 function Sidebar() {
+  const dispatch = useAppDispatch();
   const [activeLink, setActiveLink] = useState<string>("");
 
   const tabs = [
@@ -19,6 +22,12 @@ function Sidebar() {
       icon: <FaStar />,
     },
   ];
+
+  const handleLogout = () => {
+    dispatch(authActions.logout());
+    // sessionStorage.removeItem("user");
+  };
+
   useEffect(() => {
     setActiveLink(tabs[0].name);
   }, []);
@@ -57,6 +66,7 @@ function Sidebar() {
         <ul className="flex flex-col gap-3">
           <li
             className={`py-2.5 px-4 hover:bg-mainPrimary rounded-2xl ease-in-out duration-200`}
+            onClick={handleLogout}
           >
             Logout
           </li>

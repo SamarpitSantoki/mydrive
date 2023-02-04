@@ -4,18 +4,24 @@ import Navbar from "../components/common/Navbar/Navbar";
 import MyFiles from "../components/MyFiles";
 import { useGetDirectoryQuery } from "../store/api";
 import { useRouter } from "next/router";
-import { useAppSelector } from "../store/hooks";
-import { authSelector } from "../store/authSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { authActions, authSelector } from "../store/authSlice";
 import { useEffect } from "react";
 import SignIn from "./auth/signin";
 
 export default function Home() {
   const router = useRouter();
   const { isAuthenticated } = useAppSelector(authSelector);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const sessionUser = sessionStorage?.getItem("user");
+    if (sessionUser) dispatch(authActions.persistedLogin(sessionUser));
+  }, []);
+
   if (!isAuthenticated && router.pathname !== "/auth/signin") {
     return <SignIn />;
   }
-
   return (
     <>
       <Head>

@@ -21,7 +21,7 @@ const s3 = new S3({
 export const createFolder = async (
   name: string,
   parentId: string,
-  ownerId: string,
+  ownerid: string,
   nodeType: string,
   url: string
 ) => {
@@ -31,7 +31,7 @@ export const createFolder = async (
         name,
         nodeType: nodeType ?? "folder",
         parentId: parentId === "null" ? null : parentId,
-        ownerId,
+        ownerId: ownerid,
         url,
       },
     });
@@ -45,7 +45,7 @@ export const createFolder = async (
   }
 };
 
-export const getFolder = async (id: string) => {
+export const getFolder = async (id: string, ownerid: string) => {
   try {
     if (typeof id !== "string") {
       throw new Error("id must be a string");
@@ -63,8 +63,9 @@ export const getFolder = async (id: string) => {
               parent: {
                 is: null,
               },
+              ownerId: ownerid,
             }
-          : { id },
+          : { id, ownerId: ownerid },
       select: {
         id: true,
         name: true,
@@ -128,16 +129,18 @@ export const deleteNode = async (id: string) => {
     if (resp!.nodeType !== "folder") {
       console.log(resp!.url?.split("/").pop()!);
 
-      const res = await s3Client.send(new DeleteObjectCommand(
-        {
-          Bucket: process.env.BUCKET_NAME!,
-          Key: resp!.url?.split("/").pop()!,
-        }
-      )).catch((err) => {
-        console.log(err);
-      });
+      const res = await s3Client
+        .send(
+          new DeleteObjectCommand({
+            Bucket: process.env.BUCKET_NAME!,
+            Key: resp!.url?.split("/").pop()!,
+          })
+        )
+        .catch((err) => {
+          console.log(err);
+        });
 
-      console.log('check',res);
+      console.log("check", res);
       // s3.deleteObject(
       //   {
       //     Bucket: process.env.BUCKET_NAME!,

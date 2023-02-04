@@ -7,6 +7,12 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
+
+    if (req.headers.ownerid === undefined) {
+      return res.status(400).send("Error");
+    }
+
+
     const resp = await createFolder(
       req.body.name,
       req.body.parentId,

@@ -127,7 +127,7 @@ export default function SignUp() {
               "
               type="submit"
             >
-              Sign In
+              Sign Up
             </button>
             <Grid container>
               <Grid item>

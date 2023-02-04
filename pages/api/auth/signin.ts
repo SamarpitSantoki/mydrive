@@ -1,6 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import connectMongo from "../../../helpers/connectMongo";
 import prisma from "../../../helpers/prisma";
 import Password from "../../../helpers/password";
 import { IRespSignIn } from "../../../types";
