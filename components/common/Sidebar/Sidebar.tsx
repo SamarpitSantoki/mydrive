@@ -47,7 +47,7 @@ function Sidebar() {
 
       "
       >
-        SAMAR's Drive
+        My Drive
       </div>
       <div className="w-full p-5">
         <ul className="flex flex-col gap-3">

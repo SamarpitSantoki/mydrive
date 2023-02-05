@@ -10,7 +10,7 @@ export function Copyright(props: any) {
     >
       {"Copyright © "}
       <Link color="inherit" href="https://drive.samarpitsantoki.com">
-        Drive by Samarpit Santoki
+        Drive by Samarpit Santoki & Vivek Sachdev
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
