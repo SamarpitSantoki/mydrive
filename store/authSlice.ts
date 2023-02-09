@@ -16,10 +16,13 @@ const initialState: AuthState = {
 export const Login = createAsyncThunk(
   "auth/login",
   async (payload: { email: string; password: string }) => {
-    const response = await axios.post("http://localhost:3000/api/auth/signin", {
-      email: payload.email,
-      password: payload.password,
-    });
+    const response = await axios.post(
+      process.env.BASE_URL + "/api/auth/signin",
+      {
+        email: payload.email,
+        password: payload.password,
+      }
+    );
     if (response.status === 200)
       sessionStorage.setItem("user", JSON.stringify(response.data));
     return response.data;
@@ -29,10 +32,13 @@ export const Login = createAsyncThunk(
 export const SignUp = createAsyncThunk(
   "auth/signup",
   async (payload: { email: string; password: string }) => {
-    const response = await axios.post("http://localhost:3000/api/auth/signup", {
-      email: payload.email,
-      password: payload.password,
-    });
+    const response = await axios.post(
+      process.env.BASE_URL + "/api/auth/signup",
+      {
+        email: payload.email,
+        password: payload.password,
+      }
+    );
     if (response.status === 200)
       sessionStorage.setItem("user", JSON.stringify(response.data));
     return response.data;
