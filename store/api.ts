@@ -4,7 +4,7 @@ import { AuthState } from "./authSlice";
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.BASE_URL + "/api",
+    baseUrl: "/api",
     prepareHeaders: (headers, { getState }) => {
       const { user } = (getState() as { auth: AuthState }).auth;
       console.log("user", user);
