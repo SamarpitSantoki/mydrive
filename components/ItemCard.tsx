@@ -1,5 +1,5 @@
-import { FaFolder, FaGripVertical } from "react-icons/fa";
-import { BsStar, BsThreeDotsVertical } from "react-icons/bs";
+import { FaFilePdf, FaFolder, FaGripVertical } from "react-icons/fa";
+import { BsStar, BsStarFill, BsThreeDotsVertical } from "react-icons/bs";
 import React from "react";
 import {
   Avatar,
@@ -15,11 +15,13 @@ export function ItemCard(props: {
   id: number;
   name: string;
   nodeType: string;
-  size: string;
+  nodeSize: number;
   url?: string;
+  isStarred: boolean;
   parentId: string | null;
   handleFolderClick: (item: any) => void;
   handleDelete: (item: any) => void;
+  handleStarToggle: (id: any, value: boolean) => void;
 }) {
   const viewable = ["image/png", "image/jpeg", "image/jpg"];
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -55,15 +57,49 @@ export function ItemCard(props: {
         >
           {!viewable.includes(props.nodeType) && (
             <>
-              <FaFolder
-                style={{
-                  flex: 1,
-                  placeContent: "start",
-                }}
-                color="#583DA1"
-                size={35}
-              />
-              <BsStar color="#583DA1" size={20} />
+              {props.nodeType === "folder" && (
+                <FaFolder
+                  style={{
+                    flex: 1,
+                    placeContent: "start",
+                  }}
+                  color="#583DA1"
+                  size={35}
+                />
+              )}
+              {props.nodeType === "application/pdf" && (
+                <FaFilePdf
+                  style={{
+                    flex: 1,
+                    placeContent: "start",
+                  }}
+                  color="darkred"
+                  size={35}
+                />
+              )}
+              {props.isStarred ? (
+                <BsStarFill
+                  size={20}
+                  onClick={() => {
+                    props.handleStarToggle(props.id, !props.isStarred);
+                  }}
+                  onTouchEndCapture={() => {
+                    props.handleStarToggle(props.id, !props.isStarred);
+                  }}
+                  className="z-50 cursor-pointer text-mainPrimary opacity-80 rounded-full"
+                />
+              ) : (
+                <BsStar
+                  onClick={() => {
+                    props.handleStarToggle(props.id, !props.isStarred);
+                  }}
+                  onTouchEndCapture={() => {
+                    props.handleStarToggle(props.id, !props.isStarred);
+                  }}
+                  size={20}
+                  className="z-50 cursor-pointer text-mainPrimary opacity-80 rounded-full"
+                />
+              )}
             </>
           )}
           <Menu
@@ -136,7 +172,9 @@ export function ItemCard(props: {
           <div className="text-xs text-gray-400">{props.parentId}</div>
         </div>
         <div className="cardFooter flex   items-center bg-slate-200 px-5 pb-2">
-          <span className="pt-2 flex-1">{props.size ?? "Unknown"}</span>
+          <span className="pt-2 flex-1">
+            {(props.nodeSize / (1024 * 1024)).toFixed(2) + " mb"}
+          </span>
           {/* placeholder for show profiles of shared peoples */}
           <div className="relative w-10">
             <div className="flex items-center absolute -top-2 -right-2">
@@ -169,11 +207,28 @@ export function ItemCard(props: {
             }}
           >
             <div className="flex flex-col justify-center items-center h-full">
-              <img
-                src={props.url}
-                alt="preview"
-                className="w-1/2 h-1/2 object-contain"
-              />
+              {!viewable.includes(props.nodeType) ? (
+                <object
+                  data={props.url}
+                  type="application/pdf"
+                  width="600"
+                  height="500"
+                >
+                  <embed src={props.url} width="600px" height="500px" />
+                  <p>
+                    This browser does not support PDFs. Please download the PDF
+                    to view it:
+                    <a href={props.url}>Download PDF</a>.
+                  </p>
+                </object>
+              ) : (
+                <img
+                  src={props.url}
+                  alt="preview"
+                  className="w-1/2 h-1/2 object-contain"
+                />
+              )}
+
               <button
                 className="bg-mainPrimary text-white px-4 py-2 rounded-md mt-4"
                 onClick={() => {

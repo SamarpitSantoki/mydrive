@@ -25,6 +25,8 @@ model node {
   nodeType   String   @default("folder")
   childs     node[]   @relation("Childs")
   parent     node?    @relation("Childs", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  isStarred  Boolean  @default(false)
+  nodeSize Float?
   tags       String[]
   isDeleted  Boolean  @default(false)
   ownerId    String   @db.ObjectId

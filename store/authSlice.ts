@@ -1,16 +1,19 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { RootState } from "./store";
 export interface AuthState {
   isAuthenticated: boolean;
   user: any;
   token: string;
+  loading: boolean;
 }
 
 const initialState: AuthState = {
   isAuthenticated: false,
   user: null,
   token: "",
+  loading: false,
 };
 
 export const Login = createAsyncThunk(
@@ -20,8 +23,9 @@ export const Login = createAsyncThunk(
       email: payload.email,
       password: payload.password,
     });
-    if (response.status === 200)
+    if (response.status === 200) {
       sessionStorage.setItem("user", JSON.stringify(response.data));
+    }
     return response.data;
   }
 );
@@ -56,25 +60,39 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(Login.pending, (state, action) => {
+      state.isAuthenticated = false;
+      state.user = null;
+      state.token = "";
+      state.loading = true;
+    });
+
     builder.addCase(Login.fulfilled, (state, action) => {
       state.isAuthenticated = true;
       state.user = action.payload;
       state.token = "";
+      state.loading = false;
+      toast.success("Login Successful");
     });
     builder.addCase(Login.rejected, (state, action) => {
       state.isAuthenticated = false;
       state.user = null;
       state.token = "";
+      state.loading = false;
+      toast.error("Login Failed");
     });
     builder.addCase(SignUp.fulfilled, (state, action) => {
       state.isAuthenticated = true;
       state.user = action.payload;
       state.token = "";
+
+      toast.success("Login Successful");
     });
     builder.addCase(SignUp.rejected, (state, action) => {
       state.isAuthenticated = false;
       state.user = null;
       state.token = "";
+      toast.error("SignUp Failed");
     });
   },
 });

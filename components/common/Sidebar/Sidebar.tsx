@@ -65,7 +65,7 @@ function Sidebar() {
       <div className="w-full p-5">
         <ul className="flex flex-col gap-3">
           <li
-            className={`py-2.5 px-4 hover:bg-mainPrimary rounded-2xl ease-in-out duration-200`}
+            className={`cursor-pointer py-2.5 px-4 hover:bg-mainPrimary rounded-2xl ease-in-out duration-200`}
             onClick={handleLogout}
           >
             Logout

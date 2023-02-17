@@ -18,7 +18,8 @@ export default async function handler(
       req.body.parentId,
       req.headers.ownerid as string,
       req.body.nodeType,
-      req.body.url
+      req.body.url,
+      req.body.nodeSize
     );
     if (!resp.sucess) {
       return res.status(400).send("Error");

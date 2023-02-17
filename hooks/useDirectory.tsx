@@ -3,11 +3,13 @@ import {
   useAddFolderMutation,
   useDeleteItemsMutation,
   useGetDirectoryQuery,
+  useToggleStarMutation,
 } from "../store/api";
 
 function useDirectory(setModal?: any) {
   const [addFolderMutation, FolderAddResult] = useAddFolderMutation();
   const [deleteItemMutation, ItemDeleteResult] = useDeleteItemsMutation();
+  const [toggleItemMutation, ToggleItemResult] = useToggleStarMutation();
   const [breadcrump, setBreadcrump] = useState([
     {
       id: "null",
@@ -63,6 +65,13 @@ function useDirectory(setModal?: any) {
     });
   };
 
+  const handleStarToggle = (item: string, value: boolean) => {
+    toggleItemMutation({
+      id: item,
+      value,
+    });
+  };
+
   useEffect(() => {
     setCurrentDirectory(data?.childs);
   }, [data]);
@@ -79,6 +88,7 @@ function useDirectory(setModal?: any) {
     handleBreadcrumpClick,
     handleFolderAdd,
     handleDelete,
+    handleStarToggle,
     isFetching,
   };
 }

@@ -17,11 +17,12 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { authSelector, Login } from "../../store/authSlice";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify/dist/core";
 
 export default function SignIn() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { isAuthenticated } = useAppSelector(authSelector);
+  const { isAuthenticated, loading } = useAppSelector(authSelector);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -128,7 +129,30 @@ export default function SignIn() {
               "
               type="submit"
             >
-              Sign In
+              {loading ? (
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+              ) : (
+                "Sign In"
+              )}
             </button>
             <Grid container>
               <Grid item xs>

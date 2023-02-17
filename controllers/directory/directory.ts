@@ -23,7 +23,8 @@ export const createFolder = async (
   parentId: string,
   ownerid: string,
   nodeType: string,
-  url: string
+  url: string,
+  nodeSize: number
 ) => {
   try {
     const data = await prisma.node.create({
@@ -33,6 +34,7 @@ export const createFolder = async (
         parentId: parentId === "null" ? null : parentId,
         ownerId: ownerid,
         url,
+        nodeSize: nodeSize,
       },
     });
     return {
@@ -72,6 +74,8 @@ export const getFolder = async (id: string, ownerid: string) => {
         nodeType: true,
         parentId: true,
         url: true,
+        isStarred: true,
+        nodeSize: true,
         childs: {
           select: {
             id: true,
@@ -79,6 +83,8 @@ export const getFolder = async (id: string, ownerid: string) => {
             url: true,
             nodeType: true,
             parentId: true,
+            isStarred: true,
+            nodeSize: true,
           },
         },
       },
@@ -155,6 +161,36 @@ export const deleteNode = async (id: string) => {
       //   }
       // );
     }
+
+    return {
+      sucess: true,
+    };
+  } catch (e: any) {
+    return {
+      sucess: false,
+    };
+  }
+};
+
+export const starNode = async (id: string, value: boolean) => {
+  try {
+    if (typeof id !== "string") {
+      throw new Error("id must be a string");
+    }
+
+    if (id.length === 0) {
+      throw new Error("id must not be empty");
+    }
+
+    const resp = await prisma.node.update({
+      where: {
+        id,
+      },
+      data: {
+        isStarred: value,
+      },
+    });
+    console.log(resp);
 
     return {
       sucess: true,

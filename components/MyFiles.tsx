@@ -25,6 +25,7 @@ function MyFiles() {
     handleDelete,
     isFetching,
     workingDirectory,
+    handleStarToggle,
   } = useDirectory(setModal);
   const { user } = useAppSelector(authSelector);
   const [addFileModal, setAddFileModal] = useState(false);
@@ -54,6 +55,7 @@ function MyFiles() {
       nodeType: e.type,
       url: BUCKET_URL + user.id + "." + workingDirectory.id + "." + e.name,
       parentId: breadcrump[breadcrump.length - 1].id,
+      nodeSize: e.size,
     });
     setAwsUrlCall(false);
   };
@@ -136,6 +138,7 @@ function MyFiles() {
                   {...item}
                   handleFolderClick={handleFolderClick}
                   handleDelete={handleDelete}
+                  handleStarToggle={handleStarToggle}
                 />
               );
             })

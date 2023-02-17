@@ -2,7 +2,6 @@ import Head from "next/head";
 import Sidebar from "../components/common/Sidebar/Sidebar";
 import Navbar from "../components/common/Navbar/Navbar";
 import MyFiles from "../components/MyFiles";
-import { useGetDirectoryQuery } from "../store/api";
 import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { authActions, authSelector } from "../store/authSlice";

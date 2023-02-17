@@ -24,12 +24,7 @@ function Navbar() {
         className="flex items-center cursor-pointer hover:shadow-inner px-2 py-1 rounded-xl 
         transition duration-100 ease-in-out
         hover:shadow-slate-400 hover:ring-mainPrimary hover:ring-2"
-      >
-        <span className="rounded-full bg-offWhite p-3">
-          <BsPlusCircleFill color="#583DA1" />
-        </span>
-        <span className="ml-3 text-sm font-semibold">Add File</span>
-      </div>
+      ></div>
       <div className="hidden md:flex flex-1 justify-end gap-2 ">
         <span className="flex items-center p-3 border-2 rounded-full">
           <BsBarChartFill color="#583DA1" />
