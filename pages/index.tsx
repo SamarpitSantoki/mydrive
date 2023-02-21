@@ -5,7 +5,7 @@ import MyFiles from "../components/MyFiles";
 import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { authActions, authSelector } from "../store/authSlice";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import SignIn from "./auth/signin";
 
 export default function Home() {
@@ -13,10 +13,15 @@ export default function Home() {
   const { isAuthenticated } = useAppSelector(authSelector);
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    const sessionUser = sessionStorage?.getItem("user");
+  // callback function to check if user is authenticated
+  const checkAuth = useCallback(() => {
+    const sessionUser = JSON.parse(sessionStorage?.getItem("user") || "{}");
     if (sessionUser) dispatch(authActions.persistedLogin(sessionUser));
-  }, []);
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   if (!isAuthenticated && router.pathname !== "/auth/signin") {
     return <SignIn />;

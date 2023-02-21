@@ -44,7 +44,7 @@ export function ItemCard(props: {
           }
           props.handleFolderClick(props);
         }}
-        onTouchEndCapture={() => {
+        onTouchStartCapture={() => {
           props.handleFolderClick(props);
         }}
       >
@@ -230,6 +230,16 @@ export function ItemCard(props: {
                   className="w-1/2 h-1/2 object-contain"
                 />
               )}
+
+              {/* download button */}
+              <a
+                className="bg-mainPrimary text-white px-4 py-2 rounded-md mt-4"
+                href={props.url}
+                download
+                target={"_blank"}
+              >
+                Download
+              </a>
 
               <button
                 className="bg-mainPrimary text-white px-4 py-2 rounded-md mt-4"
