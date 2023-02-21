@@ -77,29 +77,6 @@ export function ItemCard(props: {
                   size={35}
                 />
               )}
-              {props.isStarred ? (
-                <BsStarFill
-                  size={20}
-                  onClick={() => {
-                    props.handleStarToggle(props.id, !props.isStarred);
-                  }}
-                  onTouchEndCapture={() => {
-                    props.handleStarToggle(props.id, !props.isStarred);
-                  }}
-                  className="z-50 cursor-pointer text-mainPrimary opacity-80 rounded-full"
-                />
-              ) : (
-                <BsStar
-                  onClick={() => {
-                    props.handleStarToggle(props.id, !props.isStarred);
-                  }}
-                  onTouchEndCapture={() => {
-                    props.handleStarToggle(props.id, !props.isStarred);
-                  }}
-                  size={20}
-                  className="z-50 cursor-pointer text-mainPrimary opacity-80 rounded-full"
-                />
-              )}
             </>
           )}
           <Menu
@@ -153,6 +130,29 @@ export function ItemCard(props: {
               </ListItemIcon>
             </MenuItem>
           </Menu>
+          {props.isStarred ? (
+            <BsStarFill
+              size={20}
+              onClick={() => {
+                props.handleStarToggle(props.id, !props.isStarred);
+              }}
+              onTouchEndCapture={() => {
+                props.handleStarToggle(props.id, !props.isStarred);
+              }}
+              className="z-10 cursor-pointer text-mainPrimary opacity-80 rounded-full"
+            />
+          ) : (
+            <BsStar
+              onClick={() => {
+                props.handleStarToggle(props.id, !props.isStarred);
+              }}
+              onTouchEndCapture={() => {
+                props.handleStarToggle(props.id, !props.isStarred);
+              }}
+              size={20}
+              className="z-10 cursor-pointer text-mainPrimary opacity-80 rounded-full"
+            />
+          )}
           <IconButton
             onClick={handleClick}
             size="small"
@@ -168,7 +168,9 @@ export function ItemCard(props: {
           </IconButton>
         </div>
         <div className="cardContent flex flex-col justify-end px-5 py-4">
-          <div className="text-sm font-semibold">{props.name}</div>
+          <div className="text-sm font-semibold truncate" title={props.name}>
+            {props.name}
+          </div>
           <div className="text-xs text-gray-400">{props.parentId}</div>
         </div>
         <div className="cardFooter flex   items-center bg-slate-200 px-5 pb-2">
