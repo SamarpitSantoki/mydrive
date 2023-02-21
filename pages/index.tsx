@@ -16,7 +16,7 @@ export default function Home() {
   // callback function to check if user is authenticated
   const checkAuth = useCallback(() => {
     const sessionUser = JSON.parse(sessionStorage?.getItem("user") || "{}");
-    if (sessionUser) dispatch(authActions.persistedLogin(sessionUser));
+    if (sessionUser.id) dispatch(authActions.persistedLogin(sessionUser));
   }, [isAuthenticated]);
 
   useEffect(() => {
