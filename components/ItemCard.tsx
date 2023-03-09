@@ -232,11 +232,18 @@ export function ItemCard(props: {
               )}
 
               {/* download button */}
+              <form action={props.url} method="get">
+                <button
+                  className="bg-mainPrimary text-white px-4 py-2 rounded-md mt-4"
+                  type="submit"
+                >
+                  Download
+                </button>
+              </form>
               <a
                 className="bg-mainPrimary text-white px-4 py-2 rounded-md mt-4"
                 href={props.url}
-                download
-                target={"_blank"}
+                download={props.name}
               >
                 Download
               </a>

@@ -166,6 +166,8 @@ export const deleteNode = async (id: string) => {
       sucess: true,
     };
   } catch (e: any) {
+    console.log(JSON.stringify(e, null, 2));
+    // if error P2003 is thrown, it means there is node with child nodes
     return {
       sucess: false,
     };
