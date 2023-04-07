@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../helpers/prisma";
 import Password from "../../../helpers/password";
+import { IRespSignUp } from "../../../types";
 type Data = {
   email: String;
   password: String;
@@ -40,6 +41,9 @@ export default async function handler(
         password: hashedPassword,
       },
     });
+
+    let resp: IRespSignUp = user;
+    delete resp.password;
 
     res.status(200).json(user);
   } catch (e) {

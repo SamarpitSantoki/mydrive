@@ -3,6 +3,7 @@ import SidebarLinks from "./SidebarLinks";
 import { FaStar, FaShare, FaFolder } from "react-icons/fa";
 import { useAppDispatch } from "../../../store/hooks";
 import { authActions } from "../../../store/authSlice";
+import Link from "next/link";
 
 function Sidebar() {
   const dispatch = useAppDispatch();
@@ -34,7 +35,8 @@ function Sidebar() {
 
   return (
     <aside className="hidden sticky left-0 top-0 sm:flex flex-col h-screen justify-between items-center gap-4 bg-mainBlack w-40 md:w-56 text-white">
-      <div
+      <Link
+        href={"/admin"}
         className="
         font-semibold
         text-2xl
@@ -44,11 +46,10 @@ function Sidebar() {
         border-mainPrimary
         w-full
         text-center
-
       "
       >
         My Drive
-      </div>
+      </Link>
       <div className="w-full p-5">
         <ul className="flex flex-col gap-3">
           {tabs.map((tab) => (

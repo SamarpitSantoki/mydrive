@@ -36,28 +36,41 @@ function MyFiles() {
   const uploadFile = async (e: File) => {
     console.log("breadcrump", breadcrump);
     setAwsUrlCall(true);
-    let { data } = await axios.post("/api/s3/uploadFile", {
-      name: user.id + "." + workingDirectory.id + "." + e.name,
-      type: e.type,
-    });
+    try {
+      let { data } = await axios.post(
+        "/api/s3/uploadFile",
+        {
+          name: user.id + "." + workingDirectory.id + "." + e.name,
+          type: e.type,
+        },
+        {
+          headers: {
+            ownerId: user.id,
+          },
+        }
+      );
 
-    console.log(data);
+      console.log(data);
 
-    const url = data.url;
-    let { data: newData } = await axios.put(url, e, {
-      headers: {
-        "Content-type": e.type,
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
-    mutateUploadFile({
-      name: e.name,
-      nodeType: e.type,
-      url: BUCKET_URL + user.id + "." + workingDirectory.id + "." + e.name,
-      parentId: breadcrump[breadcrump.length - 1].id,
-      nodeSize: e.size,
-    });
-    setAwsUrlCall(false);
+      const url = data.url;
+      let { data: newData } = await axios.put(url, e, {
+        headers: {
+          "Content-Type": e.type,
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+      mutateUploadFile({
+        name: e.name,
+        nodeType: e.type,
+        s3Url: BUCKET_URL + user.id + "." + workingDirectory.id + "." + e.name,
+        url: user.id + "." + workingDirectory.id + "." + e.name,
+        parentId: breadcrump[breadcrump.length - 1].id,
+        nodeSize: e.size,
+      });
+      setAwsUrlCall(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="sm:px-12 ">

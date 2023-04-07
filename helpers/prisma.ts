@@ -14,7 +14,7 @@ function getPrisma() {
         console.log("globalAny is defined")
     }
   globalAny.prisma = globalAny.prisma || new PrismaClient();
-  return globalAny.prisma;
+  return globalAny.prisma as PrismaClient;
 }
 
 export default getPrisma();

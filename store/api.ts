@@ -18,6 +18,10 @@ export const api = createApi({
   reducerPath: "api",
   tagTypes: ["Directory"],
   endpoints: (builder) => ({
+    getUsers: builder.query<any, void>({
+      query: () => "admin/users",
+    }),
+
     getDirectory: builder.query<any, string>({
       providesTags: (result, error, arg) => [{ type: "Directory", id: arg }],
       query: (payload = "root") => ({
@@ -59,6 +63,7 @@ export const api = createApi({
         parentId: string;
         nodeType: string;
         url: string;
+        s3Url: string;
         nodeSize: number;
       }
     >({
@@ -107,4 +112,5 @@ export const {
   useDeleteItemsMutation,
   useUploadFileMutation,
   useToggleStarMutation,
+  useGetUsersQuery,
 } = api;

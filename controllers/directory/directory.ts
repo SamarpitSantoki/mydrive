@@ -24,6 +24,7 @@ export const createFolder = async (
   ownerid: string,
   nodeType: string,
   url: string,
+  s3Url: string,
   nodeSize: number
 ) => {
   try {
@@ -34,6 +35,7 @@ export const createFolder = async (
         parentId: parentId === "null" ? null : parentId,
         ownerId: ownerid,
         url,
+        s3Url,
         nodeSize: nodeSize,
       },
     });

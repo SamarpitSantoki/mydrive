@@ -23,6 +23,9 @@ export function ItemCard(props: {
   handleDelete: (item: any) => void;
   handleStarToggle: (id: any, value: boolean) => void;
 }) {
+  // TODO: Make cloudfront_url dynamic
+  const CLOUDFRONT_URL = "https://d1dbhkys43gvbo.cloudfront.net";
+
   const viewable = ["image/png", "image/jpeg", "image/jpg"];
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -211,28 +214,32 @@ export function ItemCard(props: {
             <div className="flex flex-col justify-center items-center h-full">
               {!viewable.includes(props.nodeType) ? (
                 <object
-                  data={props.url}
+                  data={`${CLOUDFRONT_URL}/${props.url}`}
                   type="application/pdf"
                   width="600"
                   height="500"
                 >
-                  <embed src={props.url} width="600px" height="500px" />
+                  <embed
+                    src={`${CLOUDFRONT_URL}/${props.url}`}
+                    width="600px"
+                    height="500px"
+                  />
                   <p>
                     This browser does not support PDFs. Please download the PDF
                     to view it:
-                    <a href={props.url}>Download PDF</a>.
+                    <a href={`${CLOUDFRONT_URL}/${props.url}`}>Download PDF</a>.
                   </p>
                 </object>
               ) : (
                 <img
-                  src={props.url}
+                  src={`${CLOUDFRONT_URL}/${props.url}`}
                   alt="preview"
                   className="w-1/2 h-1/2 object-contain"
                 />
               )}
 
               {/* download button */}
-              <form action={props.url} method="get">
+              <form action={`${CLOUDFRONT_URL}/${props.url}`} method="get">
                 <button
                   className="bg-mainPrimary text-white px-4 py-2 rounded-md mt-4"
                   type="submit"
@@ -242,7 +249,7 @@ export function ItemCard(props: {
               </form>
               <a
                 className="bg-mainPrimary text-white px-4 py-2 rounded-md mt-4"
-                href={props.url}
+                href={`${CLOUDFRONT_URL}/${props.url}`}
                 download={props.name}
               >
                 Download

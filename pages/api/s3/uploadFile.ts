@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import S3 from "aws-sdk/clients/s3";
+import prisma from "../../../helpers/prisma";
 
 const s3 = new S3({
   region: process.env.REGION,
@@ -15,6 +16,23 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     let { name, parentId, type } = req.body;
+
+    if (req.headers.ownerid === undefined) {
+      return res.status(400).send("Error");
+    }
+
+    const isAllowed = await prisma.auth.findUnique({
+      where: {
+        id: req.headers.ownerid as string,
+      },
+      select: {
+        allowed: true,
+      },
+    });
+
+    if (!isAllowed?.allowed) {
+      return res.status(400).send("Error");
+    }
 
     const fileParams = {
       Bucket: process.env.BUCKET_NAME,

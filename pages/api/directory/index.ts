@@ -12,13 +12,13 @@ export default async function handler(
       return res.status(400).send("Error");
     }
 
-
     const resp = await createFolder(
       req.body.name,
       req.body.parentId,
       req.headers.ownerid as string,
       req.body.nodeType,
       req.body.url,
+      req.body.s3Url,
       req.body.nodeSize
     );
     if (!resp.sucess) {

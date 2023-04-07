@@ -13,6 +13,7 @@ datasource db {
 model auth {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String   @unique
+  allowed   Boolean  @default(false)
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -26,13 +27,15 @@ model node {
   childs     node[]   @relation("Childs")
   parent     node?    @relation("Childs", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   isStarred  Boolean  @default(false)
-  nodeSize Float?
+  nodeSize   Float?
   tags       String[]
   isDeleted  Boolean  @default(false)
   ownerId    String   @db.ObjectId
-  sharedWith String[] @db.ObjectId 
+  sharedWith String[] @db.ObjectId
   url        String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  s3Url      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
   @@index([ownerId], name: "ownerId")
 }
